@@ -1,0 +1,45 @@
+﻿@page "/uploadanh"
+<h3>Uploadfileanh</h3>
+<InputFile accepy=".jpg, .jpeg, .tiff" OnChange="FileSelected"></InputFile>
+<button @onclick="UploadFile">
+	Upload
+</button>
+
+@code {
+	private IBrowserFile file;
+	private async Task FileSelected(InputFileChangeEventArgs e)
+	{
+		file = e.File;
+	}
+	private async Task UploadFile()
+	{
+		if (file == null)
+		{
+			Console.WriteLine("Chưa chọn file");
+			return;
+		}
+		else
+		{
+			var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+			if (!Directory.Exists(uploadsFolder))
+			{
+				Directory.CreateDirectory(uploadsFolder);
+				var uploadfilePath = Path.Combine(uploadsFolder, file.Name);
+				using (var stream = new FileStream(uploadfilePath, FileMode.Create))
+				{
+					await file.OpenReadStream().CopyToAsync(stream);
+					Console.WriteLine("Upload thành công");
+				}
+			}
+			else
+			{
+				var uploadfilePath = Path.Combine(uploadsFolder, file.Name);
+				using (var stream = new FileStream(uploadfilePath, FileMode.Create))
+				{
+					await file.OpenReadStream().CopyToAsync(stream);
+					Console.WriteLine("Upload thành công");
+				}
+			}
+		}
+	}
+}

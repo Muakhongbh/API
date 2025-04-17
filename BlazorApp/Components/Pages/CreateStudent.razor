@@ -1,0 +1,50 @@
+﻿@page "/createStudent"
+@using API.Data
+@using BlazorApp.Service
+@inject IStudentService studentService
+@inject NavigationManager Navigation
+
+<h2>Create Student</h2>
+<EditForm Model="students" OnValidSubmit="Add_SinhVien">
+    <div>
+        <DataAnnotationsValidator />
+		<ValidationSummary />
+		<div class="mb-3">
+			<label for="Name" class="form-label">Name</label>
+			<InputText id="Name" @bind-Value="students.Name" class="form-control" />
+			<ValidationMessage For="@(() => students.Name)" />
+		</div>
+		<div class="mb-3">
+			<label for="LastName" class="form-label">Last Name</label>
+			<InputText id="LastName" @bind-Value="students.LastName" class="form-control" />
+			<ValidationMessage For="@(() => students.LastName)" />
+		</div>
+		<div class="mb-3">
+			<label for="Email" class="form-label">Email</label>
+			<InputText id="Email" @bind-Value="students.Email" class="form-control" />
+			<ValidationMessage For="@(() => students.Email)" />
+		</div>
+		<div class="mb-3">
+			<label for="Phone" class="form-label">Phone</label>
+			<InputText id="Phone" @bind-Value="students.Phone" class="form-control" />
+			<ValidationMessage For="@(() => students.Phone)" />
+		</div>
+		<div class="mb-3">
+			<label for="BirthDate" class="form-label">Birth Date</label>
+			<InputDate id="BirthDate" @bind-Value="students.BirthDate" class="form-control" />
+			<ValidationMessage For="@(() => students.BirthDate)" />
+		</div>
+		<button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</EditForm>
+
+@code {
+    private Strudent students = new Strudent();
+    private async Task Add_SinhVien()
+    {
+        await studentService.AddStudent(students);
+		Navigation.NavigateTo("/ListStudent");
+    }  
+	//ValidationMessage tác dụng hiện thị thông báo lỗi 
+	// để check các trường hợp thì sử dụng 
+}

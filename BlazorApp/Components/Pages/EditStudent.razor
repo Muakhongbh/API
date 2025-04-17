@@ -1,0 +1,54 @@
+﻿@page "/editstudent/{id:int}"
+@using API.Data
+@using BlazorApp.Service
+@inject NavigationManager NavigationManager
+@inject IStudentService StudentService
+
+<h3>EditStudent</h3>
+<EditForm Model="student" OnValidSubmit="Update_Student">
+	<DataAnnotationsValidator></DataAnnotationsValidator>
+	<ValidationSummary></ValidationSummary>
+	<div class="form-control mb-3">
+		<Label for="Name">Name</Label>
+		<InputText id="Name" @bind-Value="student.Name" class="form-control"></InputText>
+	</div>
+	<div class="form-control mb-3">
+		<Label for="LastName">Last Name</Label>
+		<InputText id="LastName" @bind-Value="student.LastName" class="form-control"></InputText>
+	</div>
+	<div class="form-control mb-3">
+		<Label for="Email">Email</Label>
+		<InputText id="Email" @bind-Value="student.Email" class="form-control"></InputText>
+	</div>
+	<div class="form-control mb-3">
+		<Label for="Phone">Phone</Label>
+		<InputText id="Phone" @bind-Value="student.Phone" class="form-control"></InputText>
+	</div>
+	<div class="form-control mb-3">
+		<Label for="BirthDate">Birth Date</Label>
+		<InputDate id="BirthDate" @bind-Value="student.BirthDate" class="form-control"></InputDate>
+	</div>
+	<button type="submit" class="btn btn-primary">Update</button>
+</EditForm>
+
+
+@code {
+	[Parameter]
+	// id { get; set; } // id truyền vào từ ListStudent
+	// id là biến truyền vào từ ListStudent
+	// parameter là thuộc tính của Blazor để nhận giá trị từ bên ngoài
+	public int id { get; set; }
+	private Strudent student = new Strudent();
+	protected override async Task OnInitializedAsync()
+	{
+		student = await StudentService.GetStudentById(id);
+	}
+	private async Task Update_Student()
+	{
+		Console.WriteLine("Submit được gọi");
+		await StudentService.UpdateStudent(id,student);
+		NavigationManager.NavigateTo("/ListStudent");
+	}
+	//ValidationSummary có tác dụng hiển thị tất cả các lỗi của các trường trong form và sử dụng 
+	// <ValidationMessage For="@(() => student.Phone)"></ValidationMessage> có nghia là hiển thị lỗi của trường Phone nêu có lỗi
+}
